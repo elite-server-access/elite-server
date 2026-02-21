@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Streamers Server</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI, sans-serif;}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(-45deg,#001f1f,#001a33,#002b36,#001f2f);
+background-size:400% 400%;
+animation:gradientMove 12s ease infinite;
+color:white;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.container{
+width:95%;
+max-width:520px;
+padding:35px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+border-radius:20px;
+box-shadow:0 0 40px rgba(0,255,200,0.3);
+text-align:center;
+}
+
+h2{margin-bottom:15px;color:#00ffee;}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+background:rgba(0,0,0,0.5);
+color:#00ffee;
+outline:none;
+}
+
+button{
+padding:10px 14px;
+margin:6px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#00ffee,#00ccff);
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px #00ffee;
+}
+
+.timer{font-size:22px;margin-top:10px;color:#00ffee;}
+.members{margin-top:10px;color:#00ff88;font-size:15px;}
+.bold{font-weight:bold;color:#00ff88;margin-top:20px;font-size:18px;}
+.link{margin-top:20px;color:#00ffee;cursor:pointer;text-decoration:underline;}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+
+<h2>Premium Streamers Server</h2>
+
+<input type="text" id="link" placeholder="Enter Twitch Channel Link">
+<textarea id="reason" placeholder="Why do you want to join the server?"></textarea>
+
+<p style="margin-top:10px;">Who granted you access?</p>
+
+<button onclick="selectAdmin('Elite')">Elite</button>
+<button onclick="selectAdmin('Dexil')">Dexil</button>
+<button onclick="selectAdmin('Eliclass="class="class="class="Daniel')">Daniel</button>
+
+<div id="selectedAdmin" style="margin-top:8px;"></div>
+
+<input type="password" id="code" placeholder="Access Code">
+
+<button onclick="startReview()" style="margin-top:15px;">Request Access</button>
+
+</div>
+
+<script>
+let chosenAdmin = "";
+
+function selectAdmin(admin){
+chosenAdmin = admin;
+document.getElementById("selectedAdmin").innerHTML =
+"Selected Admin: <b>" + admin + "</b>";
+}
+
+function startReview(){
+let link = document.getElementById("link").value;
+let reason = document.getElementById("reason").value;
+let code = document.getElementById("code").value;
+
+if(!link || !reason || !chosenAdmin || !code){
+alert("Please complete all fields.");
+return;
+}
+
+if(chosenAdmin !== "Elite" || code !== "198877"){
+showDecline("Access denied. Only Elite with code 198877 can grant access.");
+return;
+}
+
+let seconds = 20;
+let members = 500000 + Math.floor(Math.random()*500000);
+
+document.getElementById("app").innerHTML = `
+<h2>Application Under Review</h2>
+<div class="timer" id="timer">${seconds}</div>
+<div class="members">Active Members: <span id="members">${members.toLocaleString()}</span></div>
+<p style="margin-top:10px;">Please wait while we process your request...</p>
+`;
+
+let interval = setInterval(function(){
+seconds--;
+members += Math.floor(Math.random()*10)+1;
+document.getElementById("timer").innerText = seconds;
+document.getElementById("members").innerText = members.toLocaleString();
+if(seconds<=0){
+clearInterval(interval);
+showFinalDecline();
+}
+},1000);
+}
+
+function showDecline(message){
+document.getElementById("app").innerHTML = `
+<h2>Access Declined</h2>
+<p>${message}</p>
+<div class="link" onclick="location.reload()">Return</div>
+`;
+}
+
+function showFinalDecline(){
+document.getElementById("app").innerHTML = `
+<h2>Not Eligible</h2>
+<p>
+We're sorry. You cannot join the server because it requires mature streamers
+with over 10,000 followers.
+</p>
+<button onclick="help()">HELP</button>
+`;
+}
+
+function help(){
+document.getElementById("app").innerHTML = `
+<h2>How to Qualify</h2>
+<p>
+We recommend creating a Twitch landing page funnel to promote your channel.
+Once designed, discuss with Admin Elite about posting it in the server.
+<br><br>
+With proper exposure, the community can support and follow your channel,
+helping you reach the 10,000 follower requirement and join the server.
+</p>
+<div class="link" onclick="location.reload()">Return to Homepage</div>
+`;
+}
+</script>
+
+</body>
+</html>
